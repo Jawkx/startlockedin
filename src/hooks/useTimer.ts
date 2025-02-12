@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getLast24hTimer, saveTimer } from "../utils/db";
+import { getThisMonthTimer, saveTimer } from "../utils/db";
 
 const SAVE_INTERVAL = 5;
 
@@ -8,7 +8,7 @@ export const useTimer = () => {
 	const [seconds, setSeconds] = useState(0);
 
 	useEffect(() => {
-		getLast24hTimer().then((savedSeconds) => {
+		getThisMonthTimer().then((savedSeconds) => {
 			if (savedSeconds !== null) {
 				setSeconds(savedSeconds);
 			}

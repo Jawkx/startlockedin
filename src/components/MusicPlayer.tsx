@@ -62,7 +62,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({
 
 			{seconds > 0 ? (
 				<h2 className="text-green-400 text-xl font-mono mb-2 my-2">
-					Last 24 hour
+					This month
 				</h2>
 			) : null}
 

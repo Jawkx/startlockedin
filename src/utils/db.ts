@@ -4,7 +4,7 @@ const DB_VERSION = 1;
 
 interface TimerData {
 	seconds: number;
-	timestamp: number;
+	month: number;
 }
 
 interface MusicData {
@@ -34,7 +34,7 @@ export const saveTimer = async (seconds: number): Promise<void> => {
 
 	const timerData: TimerData = {
 		seconds: seconds,
-		timestamp: Date.now(),
+		month: new Date().getMonth(),
 	};
 
 	store.put(timerData, "timer");
@@ -67,7 +67,7 @@ export const getSavedMusicLink = async (): Promise<string | null> => {
 	});
 };
 
-export const getLast24hTimer = async (): Promise<number | null> => {
+export const getThisMonthTimer = async (): Promise<number | null> => {
 	const db = await initDB();
 	const tx = db.transaction(STORE_NAME, "readonly");
 	const store = tx.objectStore(STORE_NAME);
@@ -76,9 +76,10 @@ export const getLast24hTimer = async (): Promise<number | null> => {
 		const request = store.get("timer");
 		request.onsuccess = () => {
 			const typedResult = request.result as TimerData;
-			const currentTime = Date.now();
-			const { timestamp: savedTimestamp, seconds } = typedResult;
-			if (currentTime - savedTimestamp < 24 * 60 * 60 * 1000) {
+			const currentMonth = new Date().getMonth();
+
+			const { month: savedMonth, seconds } = typedResult;
+			if (savedMonth === currentMonth) {
 				resolve(seconds);
 			} else {
 				resolve(0);
